@@ -16,13 +16,10 @@ function clear() {
 }
 
 function currentLength(theta) {
-  if (theta == undefined) theta = 0;
   return Math.cos(theta) * fullLength;
 }
 
 function drawSquare(theta) {
-  if (theta == undefined) theta = 0;
-
   var width = currentLength(theta);
   var deltaX = (fullLength - width) / 2;
 
@@ -45,7 +42,6 @@ function drawSquare(theta) {
 }
 
 function drawCross(theta) {
-  if (theta == undefined) theta = 0;
   var length = currentLength(theta);
   var delta = fullLength - length;
   var startX = left + delta / 2;
