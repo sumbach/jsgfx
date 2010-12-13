@@ -5,6 +5,7 @@ fullLength = 300;
 halfLength = fullLength / 2;
 centerX = left + halfLength;
 centerY = topp + halfLength;
+centerZ = fullLength * 2;
 
 function main() {
   canvas = document.getElementById("canvas");
@@ -21,34 +22,39 @@ function currentHalfLength(theta) {
   return Math.cos(theta) * halfLength;
 }
 
-function drawSquare(theta) {
-  var halfWidth = currentHalfLength(theta);
-  var deltaX = halfLength - halfWidth;
+function projectedLength(length, deltaZ) {
+  return length * (centerZ / (centerZ + deltaZ));
+}
 
-  var deltaY;
-  if (Math.sin(theta) == 0) {
-    deltaY = 0;
-  } else {
-    var hyp = deltaX / Math.sin(theta);
-    // console.log(hyp);
-    deltaY = hyp * Math.cos(theta);
-  }
+function drawSquare(theta) {
+  var deltaZ = halfLength * Math.sin(theta);
+
+  var halfWidth = currentHalfLength(theta);
+  var halfWidthLeft  = projectedLength(halfWidth, -deltaZ);
+  var halfWidthRight = projectedLength(halfWidth, +deltaZ);
+
+  var halfHeightLeft  = projectedLength(halfLength, -deltaZ);
+  var halfHeightRight = projectedLength(halfLength, +deltaZ);
 
   context.beginPath();
-  context.moveTo(centerX - halfWidth, centerY - halfLength - deltaY);
-  context.lineTo(centerX + halfWidth, centerY - halfLength + deltaY);
-  context.lineTo(centerX + halfWidth, centerY + halfLength - deltaY);
-  context.lineTo(centerX - halfWidth, centerY + halfLength + deltaY);
-  context.lineTo(centerX - halfWidth, centerY - halfLength - deltaY);
+  context.moveTo(centerX - halfWidthLeft,  centerY - halfHeightLeft);
+  context.lineTo(centerX + halfWidthRight, centerY - halfHeightRight);
+  context.lineTo(centerX + halfWidthRight, centerY + halfHeightRight);
+  context.lineTo(centerX - halfWidthLeft,  centerY + halfHeightLeft);
+  context.lineTo(centerX - halfWidthLeft,  centerY - halfHeightLeft);
   context.stroke();
 }
 
 function drawCross(theta) {
+  var deltaZ = halfLength * Math.sin(theta);
+
   var halfWidth = currentHalfLength(theta);
+  var halfWidthLeft  = projectedLength(halfWidth, -deltaZ);
+  var halfWidthRight = projectedLength(halfWidth, +deltaZ);
 
   context.beginPath();
-  context.moveTo(centerX - halfWidth, centerY);
-  context.lineTo(centerX + halfWidth, centerY);
+  context.moveTo(centerX - halfWidthLeft,  centerY);
+  context.lineTo(centerX + halfWidthRight, centerY);
   context.moveTo(centerX, centerY - halfLength);
   context.lineTo(centerX, centerY + halfLength);
   context.stroke();
