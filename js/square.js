@@ -1,8 +1,10 @@
 topp = 100;
 left = 150;
 fullLength = 300;
-centerX = left + (fullLength / 2);
-centerY = topp + (fullLength / 2);
+
+halfLength = fullLength / 2;
+centerX = left + halfLength;
+centerY = topp + halfLength;
 
 function main() {
   canvas = document.getElementById("canvas");
@@ -15,13 +17,13 @@ function clear() {
   context.clearRect(0, 0, canvas.width, canvas.height);
 }
 
-function currentLength(theta) {
-  return Math.cos(theta) * fullLength;
+function currentHalfLength(theta) {
+  return Math.cos(theta) * halfLength;
 }
 
 function drawSquare(theta) {
-  var width = currentLength(theta);
-  var deltaX = (fullLength - width) / 2;
+  var halfWidth = currentHalfLength(theta);
+  var deltaX = halfLength - halfWidth;
 
   var deltaY;
   if (Math.sin(theta) == 0) {
@@ -33,25 +35,22 @@ function drawSquare(theta) {
   }
 
   context.beginPath();
-  context.moveTo(left + deltaX, topp - deltaY);
-  context.lineTo(left + deltaX + width, topp + deltaY);
-  context.lineTo(left + deltaX + width, topp + fullLength - deltaY);
-  context.lineTo(left + deltaX, topp + fullLength + deltaY);
-  context.lineTo(left + deltaX, topp - deltaY);
+  context.moveTo(centerX - halfWidth, centerY - halfLength - deltaY);
+  context.lineTo(centerX + halfWidth, centerY - halfLength + deltaY);
+  context.lineTo(centerX + halfWidth, centerY + halfLength - deltaY);
+  context.lineTo(centerX - halfWidth, centerY + halfLength + deltaY);
+  context.lineTo(centerX - halfWidth, centerY - halfLength - deltaY);
   context.stroke();
 }
 
 function drawCross(theta) {
-  var length = currentLength(theta);
-  var delta = fullLength - length;
-  var startX = left + delta / 2;
-  var endX = startX + length;
+  var halfWidth = currentHalfLength(theta);
 
   context.beginPath();
-  context.moveTo(startX, centerY);
-  context.lineTo(endX, centerY);
-  context.moveTo(centerX, topp);
-  context.lineTo(centerX, topp + fullLength);
+  context.moveTo(centerX - halfWidth, centerY);
+  context.lineTo(centerX + halfWidth, centerY);
+  context.moveTo(centerX, centerY - halfLength);
+  context.lineTo(centerX, centerY + halfLength);
   context.stroke();
 }
 
